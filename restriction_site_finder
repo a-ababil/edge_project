@@ -1,0 +1,40 @@
+import datetime
+restriction_enzymes = { "EcoRI": "GAATTC", "BamHI": "GGATCC", "HindIII": "AAGCTT", "NotI": "GCGGCCGC", "XhoI": "CTCGAG", "SalI": "GTCGAC", SmaI": "CCCGGG", KpnI": "GGTACC", "PstI": "CTGCAG", NheI": "GCTAGC", ClaI": "ATCGAT", ApaI": "GGGCCC", "BglII": "AGATCT", SpeI": "ACTAGT", EcoRV": "GATATC", XbaI": "TCTAGA", "SacI": "GAGCTC", HpaI": "GTTAAC", SphI": "GCATGC", AvaI": "CYCGRG", "DpnI": "Gm6ATC" }
+
+def find_restriction_sites(dna_sequence):
+    positions = {}
+
+    for enzyme, site in restriction_enzymes.items():
+        start = 0
+        enzyme_positions = []
+
+        while True:
+            start = dna_sequence.find(site, start)
+            if start == -1:
+                break
+            enzyme_positions.append(start + 1)
+            start += 1
+
+        if enzyme_positions:
+            positions[enzyme] = enzyme_positions
+
+    return positions
+
+dna_sequence = input("Enter a DNA sequence: ").upper()
+
+restriction_sites = find_restriction_sites(dna_sequence)
+
+current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+log_entry = f"\n[{current_time}] DNA Sequence: {dna_sequence}\n"
+
+if restriction_sites:
+    log_entry += "\nRestriction sites found:\n"
+    for enzyme, pos in restriction_sites.items():
+        log_entry += f"{enzyme}: {pos}\n"
+else:
+    log_entry += "No restriction sites found in the provided DNA sequence.\n"
+
+with open("restriction_sites_log.txt", "a") as log_file:
+    log_file.write(log_entry)
+
+print(log_entry)
